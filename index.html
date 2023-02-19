@@ -1,10 +1,38 @@
 <!DOCTYPE html>
     <html>
         <head>
-            <title> beta clicker </title>
+            <title>Potato Clicker</title>
+            <link rel="stylesheet" href="index.css">
         </head>
 
         <body>
+            <img id="mainimg" src="images/potato.png">
+            <h1 id="clicks">You have 0 potatoes</h1>
+            
+            <div id="upgrades">
+                <div class="upgrd">
+                    <p>Buy 1 Farmer</p>
+                    <img src="images/farmer.jpg" id="farmer-el">
+                    <p id="farmerCost">12 Potatoes</p>
+                    <p id="farmerNumber">You have 0 farmers</p>
+                </div>
 
+              
+                    <div class="upgrd">
+                        <p>Buy 1 Farm</p>
+                        <img src="images/farm.jpg" id="farm-el">
+                        <p id="farmCost">100 Potatoes</p>
+                        <p id="farmNumber">You have 0 farms</p>
+                    </div>
+
+                    <div class="upgrd">
+                        <p>Buy 1 Factory</p>
+                        <img src="images/factory.png" id="factory-el">
+                        <p id="factoryCost">550 Potatoes</p>
+                        <p id="factoryNumber">You have 0 factories</p>
+                    </div>
+                    </div>
+                    <button class="btn" id="deletebtn"><h1 id="deletetxt">DELETE SAVE</h1></button>
+            <script src="index.js"></script>
         </body>
     </html>

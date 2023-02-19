@@ -1,0 +1,84 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: none;
+    background: lightgrey;
+}
+
+#mainimg {
+    width: 365px;
+    transition: all 0.2s ease-in-out;
+    margin: none;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+#mainimg:hover {
+    transform: scale(1.1);
+}
+#mainimg:active {
+    transform: scale(1.0);
+    transition: none;
+}
+
+button {
+    transition: all 0.2s ease-in-out;
+    margin: 10px;
+
+
+    border: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
+    font-weight: bold;
+    width: 220px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+.btn:active {
+    transform: scale(1.0);
+    transition: none;
+}
+
+#savebtn {
+    background: darkgreen;
+}
+
+#deletebtn {
+    margin-top: 300px;
+    background: darkred;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+img {
+    transition: all 0.2s ease-in-out;
+    width: 50px;
+    border-radius: 5px;
+}
+
+img:hover {
+    transform: scale(1.1);
+}
+
+img:active {
+    transform: scale(1.0);
+    transition: none;
+}
+
+.upgrd {
+    margin-top: 50px;
+    
+    font-weight: bold;
+}
+
+#upgrades {
+    margin-right: auto;
+}
