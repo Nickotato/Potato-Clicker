@@ -134,6 +134,6 @@ deleteBtn.addEventListener("dblclick", function() {
     farmCost = 100
     farmNumber = 0
     factoryNumber = 0
-    factoryCost = 500
+    factoryCost = 550
     localStorage.clear()
 })
