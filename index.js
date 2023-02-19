@@ -27,7 +27,10 @@ let factoryNumber = 0
 let clickCount = 0
 let multiplier = 1
 
-load()
+if (parseInt(localStorage.getItem("clickCount")) > 0) {
+    load()
+}
+
 
 mainImgEl.addEventListener("click",function() {
     clickCount += 1
