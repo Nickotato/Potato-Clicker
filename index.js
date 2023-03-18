@@ -3,6 +3,7 @@ setInterval(calculate, 1000);
 const deleteBtn = document.getElementById("deletebtn")
 const deleteTxt = document.getElementById("deletetxt")
 const clickEl = document.getElementById("clicks")
+const potatosEl = document.getElementById("potato/s")
 const mainImgEl = document.getElementById("mainimg")
 const farmerEl = document.getElementById("farmer-el")
 const farmEl = document.getElementById("farm-el")
@@ -28,8 +29,20 @@ const mineNumberEl = document.getElementById("mineNumber")
 let mineCost = 1384
 let mineNumber = 0
 
+const bakerEl = document.getElementById("baker-el")
+const bakerCostEl = document.getElementById("bakerCost")
+const bakerNumberEl = document.getElementById("bakerNumber")
+let bakerCost = 16234
+let bakerNumber = 0
+
+const bankEl = document.getElementById("bank-el")
+const bankCostEl = document.getElementById("bankCost")
+const bankNumberEl = document.getElementById("bankNumber")
+let bankCost = 45832
+let bankNumber = 0
 
 
+let potatos = 0
 let clickCount = 0
 let multiplier = 1
 
@@ -39,7 +52,7 @@ if (parseInt(localStorage.getItem("clickCount")) > 0) {
 
 
 mainImgEl.addEventListener("click",function() {
-    clickCount += 1000000
+    clickCount += 1
     update()
 })
 
@@ -76,15 +89,38 @@ mineEl.addEventListener("click", function() {
         }
 })
 
+bakerEl.addEventListener("click", function() {
+    if (clickCount >= bakerCost) {
+        bakerCost = upgrades(bakerCost, bakerNumber)
+        bakerNumber += 1
+        update() 
+        }
+})
+
+bankEl.addEventListener("click", function() {
+    if (clickCount >= bankCost) {
+        bankCost = upgrades(bankCost, bankNumber)
+        bankNumber += 1
+        update() 
+        }
+})
+
 function calculate() {
     clickCount = clickCount + farmerNumber * multiplier;
     clickCount = clickCount + farmNumber * 3 * multiplier;
     clickCount = clickCount + factoryNumber * 10 * multiplier;
     clickCount = clickCount + mineNumber * 16 * multiplier;
+    clickCount = clickCount + bakerNumber * 24 * multiplier;
+    clickCount = clickCount + bankNumber * 67 * multiplier;
+
+    potatos = multiplier * (farmerNumber + farmNumber * 3 + factoryNumber * 10 + mineNumber * 16 + bakerNumber * 24 + bankNumber * 67)
         update()
 }
 
 function update() {
+    potatos = multiplier * (farmerNumber + farmNumber * 3 + factoryNumber * 10 + mineNumber * 16 + bakerNumber * 24 + bankNumber * 67)
+    potatosEl.textContent = `You are making ${potatos} potatoes every second`
+
     clickEl.textContent = `You have ${clickCount} potatoes`
     farmerCostEl.textContent = `${farmerCost} Potatoes`
     farmerNumberEl.textContent = `You have ${farmerNumber} farmers`
@@ -95,6 +131,10 @@ function update() {
 
     mineCostEl.textContent = `${mineCost} Potatoes`
     mineNumberEl.textContent = `You have ${mineNumber} mines`
+    bakerCostEl.textContent = `${bakerCost} Potatoes`
+    bakerNumberEl.textContent = `You have ${bakerNumber} bakers`
+    bankCostEl.textContent = `${bankCost} Potatoes`
+    bankNumberEl.textContent = `You have ${bankNumber} banks`
     save()
 }
 
@@ -121,6 +161,11 @@ function save() {
     localStorage.setItem("factoryCost", factoryCost);
     localStorage.setItem("mineNumber", mineNumber);
     localStorage.setItem("mineCost", mineCost);
+    localStorage.setItem("bakerNumber", bakerNumber);
+    localStorage.setItem("bakerCost", bakerCost);
+    localStorage.setItem("bankNumber", bankNumber);
+    localStorage.setItem("bankCost", bankCost);
+
     localStorage.setItem("multiplier", multiplier);
 }
 
@@ -136,6 +181,10 @@ function load() {
     factoryCost = parseInt(localStorage.getItem("factoryCost"))
     mineNumber = parseInt(localStorage.getItem("mineNumber"))
     mineCost = parseInt(localStorage.getItem("mineCost"))
+    bakerNumber = parseInt(localStorage.getItem("bakerNumber"))
+    bakerCost = parseInt(localStorage.getItem("bakerCost"))
+    bankNumber = parseInt(localStorage.getItem("bankNumber"))
+    bankCost = parseInt(localStorage.getItem("bankCost"))
     update();
 
 }
@@ -159,5 +208,9 @@ deleteBtn.addEventListener("dblclick", function() {
     factoryCost = 550
     mineNumber = 0
     mineCost = 1384
+    bakerNumber = 0
+    bakerCost = 16234
+    bankNumber = 0
+    bankCost = 45832
     localStorage.clear()
 })
