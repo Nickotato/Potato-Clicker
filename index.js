@@ -22,6 +22,12 @@ const factoryNumberEl = document.getElementById("factoryNumber")
 let factoryCost = 550
 let factoryNumber = 0
 
+const mineEl = document.getElementById("mine-el")
+const mineCostEl = document.getElementById("mineCost")
+const mineNumberEl = document.getElementById("mineNumber")
+let mineCost = 1384
+let mineNumber = 0
+
 
 
 let clickCount = 0
@@ -33,7 +39,7 @@ if (parseInt(localStorage.getItem("clickCount")) > 0) {
 
 
 mainImgEl.addEventListener("click",function() {
-    clickCount += 1
+    clickCount += 1000000
     update()
 })
 
@@ -62,10 +68,19 @@ factoryEl.addEventListener("click",function() {
         }
 })
 
+mineEl.addEventListener("click", function() {
+    if (clickCount >= mineCost) {
+        mineCost = upgrades(mineCost, mineNumber)
+        mineNumber += 1
+        update() 
+        }
+})
+
 function calculate() {
     clickCount = clickCount + farmerNumber * multiplier;
     clickCount = clickCount + farmNumber * 3 * multiplier;
     clickCount = clickCount + factoryNumber * 10 * multiplier;
+    clickCount = clickCount + mineNumber * 16 * multiplier;
         update()
 }
 
@@ -77,6 +92,9 @@ function update() {
     farmNumberEl.textContent = `You have ${farmNumber} farms`
     factoryCostEl.textContent = `${factoryCost} Potatoes`
     factoryNumberEl.textContent = `You have ${factoryNumber} factories`
+
+    mineCostEl.textContent = `${mineCost} Potatoes`
+    mineNumberEl.textContent = `You have ${mineNumber} mines`
     save()
 }
 
@@ -101,6 +119,8 @@ function save() {
     localStorage.setItem("farmCost", farmCost);
     localStorage.setItem("factoryNumber", factoryNumber);
     localStorage.setItem("factoryCost", factoryCost);
+    localStorage.setItem("mineNumber", mineNumber);
+    localStorage.setItem("mineCost", mineCost);
     localStorage.setItem("multiplier", multiplier);
 }
 
@@ -114,6 +134,8 @@ function load() {
     farmNumber = parseInt(localStorage.getItem("farmNumber"))
     factoryNumber = parseInt(localStorage.getItem("factoryNumber"))
     factoryCost = parseInt(localStorage.getItem("factoryCost"))
+    mineNumber = parseInt(localStorage.getItem("mineNumber"))
+    mineCost = parseInt(localStorage.getItem("mineCost"))
     update();
 
 }
@@ -135,5 +157,7 @@ deleteBtn.addEventListener("dblclick", function() {
     farmNumber = 0
     factoryNumber = 0
     factoryCost = 550
+    mineNumber = 0
+    mineCost = 1384
     localStorage.clear()
 })
