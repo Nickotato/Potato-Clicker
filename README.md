@@ -9,4 +9,4 @@
 - [ ] Update UI
 - [ ] Mulitplier
 - [ ] STOP GETTING THE F***ING VALUEs STRAIGHT FROM THE DOM
-*`cost = document.getElementById('cost').innerHTML`*
+:*`cost = document.getElementById('cost').innerHTML`*
