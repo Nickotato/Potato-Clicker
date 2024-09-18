@@ -1,4 +1,4 @@
-#Fun Clicker Game
+# Fun Clicker Game
 
-##Plan to Add
+## Plan to Add
 -[] Potato image to update
