@@ -1,4 +1,7 @@
 # Fun Clicker Game
+*Very fun game about clicking potatos*
+
+`code`
 
 ## Plan to Add
--[ ] Potato image to update
+- [ ] Update the website
