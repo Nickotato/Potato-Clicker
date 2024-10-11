@@ -6,7 +6,6 @@
 ## Plan to Add
 - [ ] Clicked image update on game progression
 - [ ] Ability to sell units
-- [ ] Update UI
-- [ ] Mulitplier
-- [ ] STOP GETTING THE F***ING VALUEs STRAIGHT FROM THE DOM
-:*`cost = document.getElementById('cost').innerHTML`*
+- [x] Update UI
+- [x] Mulitplier
+- [x] STOP GETTING THE F***ING VALUEs STRAIGHT FROM THE DOM

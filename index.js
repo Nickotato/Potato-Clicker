@@ -1,216 +1,277 @@
-setInterval(calculate, 1000);
+setInterval(update, 1000);
 
-const deleteBtn = document.getElementById("deletebtn")
-const deleteTxt = document.getElementById("deletetxt")
-const clickEl = document.getElementById("clicks")
-const potatosEl = document.getElementById("potato/s")
-const mainImgEl = document.getElementById("mainimg")
-const farmerEl = document.getElementById("farmer-el")
-const farmEl = document.getElementById("farm-el")
-const farmerCostEl = document.getElementById("farmerCost")
-const farmerNumberEl = document.getElementById("farmerNumber")
-const farmCostEl = document.getElementById("farmCost")
-const farmNumberEl = document.getElementById("farmNumber")
-let farmerCost = 12
-let farmerNumber = 0
-let farmCost = 100
-let farmNumber = 0
+/////////////////////////////////
+/////GETTING ELEMENTS BY ID/////
+///////////////////////////////
 
+const potato = document.getElementById("potato");
+const deleteBtn = document.getElementById("delete");
 
-const factoryEl = document.getElementById("factory-el")
-const factoryCostEl = document.getElementById("factoryCost")
-const factoryNumberEl = document.getElementById("factoryNumber")
-let factoryCost = 550
-let factoryNumber = 0
+const farmerBtn = document.getElementById("farmer");
+const bakerBtn = document.getElementById("baker");
 
-const mineEl = document.getElementById("mine-el")
-const mineCostEl = document.getElementById("mineCost")
-const mineNumberEl = document.getElementById("mineNumber")
-let mineCost = 1384
-let mineNumber = 0
+const clickCountBtn = document.getElementById("clickCount");
+const multiplierBtn = document.getElementById("multiplier");
 
-const bakerEl = document.getElementById("baker-el")
-const bakerCostEl = document.getElementById("bakerCost")
-const bakerNumberEl = document.getElementById("bakerNumber")
-let bakerCost = 16234
-let bakerNumber = 0
+const option1 = document.getElementById("option1");
+const option2 = document.getElementById("option2");
+//////////////////
+////VARIABLES////
+////////////////
 
-const bankEl = document.getElementById("bank-el")
-const bankCostEl = document.getElementById("bankCost")
-const bankNumberEl = document.getElementById("bankNumber")
-let bankCost = 45832
-let bankNumber = 0
+const defaultWorkers = [
+  {
+    name: "farmer",
+    income: 1,
+    owned: 0,
+    cost: 12,
+  },
+  {
+    name: "baker",
+    income: 20,
+    owned: 0,
+    cost: 50,
+  },
+];
 
+const defaultUpgrades = {
+  clickCount: 1,
+  multiplier: 1,
+  clickCost: 100,
+  multiplierCost: 100,
+};
 
-let potatos = 0
-let clickCount = 0
-let multiplier = 1
+let potatos = JSON.parse(localStorage.getItem("potatos")) || 0;
+let totalIncome = 0;
+let workers = JSON.parse(localStorage.getItem("workers")) || defaultWorkers;
+let upgrades = JSON.parse(localStorage.getItem("upgrades")) || defaultUpgrades;
 
-if (parseInt(localStorage.getItem("clickCount")) > 0) {
-    load()
+let workersVisible = true;
+//////////////////////////
+////INITIALIZING GAME////
+////////////////////////
+
+updateTextContent();
+
+////////////////////////
+////EVENT LISTENERS////
+//////////////////////
+
+potato.addEventListener("click", (e) => {
+  const clickSound = new Audio();
+  clickSound.src = "sound/pop.mp3";
+  clickSound.play();
+
+  const effect = document.createElement('div');
+  const effectTxt = document.createElement('h1')
+  //const effectImg = document.createElement('img')
+  
+    effect.className = 'clickEffect';
+    effect.style.position = `absolute`;
+    effect.style.width = `20px`
+    effect.style.left = `${e.pageX - 10}px`;
+    effect.style.top = `${e.pageY - 20}px`;
+    effect.style.textAlign = `center`
+    effect.style.pointerEvents = `none`;
+
+    effectTxt.textContent = `+${upgrades.clickCount}`
+    effectTxt.style.fontSize = '10px'
+    effectTxt.style.animationName = `flyUp`
+    effectTxt.style.animationDuration = `1.2s`
+    
+    // effectImg.src = `images/potato.png`
+    // effectImg.style.width = `20px`;
+    // effectImg.style.animationName = `fadeOut`
+    // effectImg.style.animationDuration = `1.2s`
+    
+    effect.appendChild(effectTxt);
+    //effect.appendChild(effectImg);
+    document.body.appendChild(effect);
+    
+    setTimeout(() => {
+        effect.remove();
+    }, 1200);
+
+  potatos += upgrades.clickCount;
+  updateTextContent();
+});
+
+deleteBtn.addEventListener("dblclick", deleteSave);
+
+deleteBtn.addEventListener("mouseover", function () {
+  deleteBtn.textContent = "Double click";
+});
+
+deleteBtn.addEventListener("mouseout", function () {
+  deleteBtn.textContent = "DELETE SAVE";
+});
+
+//Worker Event Listeners//
+
+farmerBtn.addEventListener("click", () => {
+  buyWorker("farmer");
+});
+
+bakerBtn.addEventListener("click", () => {
+  buyWorker("baker");
+});
+
+//Upgrade Event Listeners//
+
+clickCountBtn.addEventListener("click", () => upgradeClickCount());
+multiplierBtn.addEventListener("click", () => upgradeMultiplier());
+
+//Side Button Event Listeners//
+option1.addEventListener("click", () => openStatMenu());
+option2.addEventListener("click", () => openSettingMenu());
+
+document
+  .getElementById("stat--close")
+  .addEventListener("click", () => closeStatMenu());
+
+document
+  .getElementById("setting--close")
+  .addEventListener("click", () => closeSettingMenu());
+
+/////////////////////
+/////FUNCTIONS//////
+///////////////////
+
+function openStatMenu() {
+  document.getElementById("statMenu").style.display = "flex";
+  document.getElementById("statMenu").style.opacity = "100%";
+  document.body.style.overflow = "hidden";
 }
 
+function closeStatMenu() {
+  document.getElementById("statMenu").style.display = "none";
+  document.getElementById("statMenu").style.opacity = "0%";
+  document.body.style.overflowY = "auto";
+}
 
-mainImgEl.addEventListener("click",function() {
-    clickCount += 1
-    update()
-})
+function openSettingMenu() {
+  document.getElementById("settingMenu").style.display = "flex";
+  document.getElementById("settingMenu").style.opacity = "100%";
+  document.body.style.overflow = "hidden";
+}
 
-farmerEl.addEventListener("click",function() {
-    if (clickCount >= farmerCost) {
-    farmerCost = upgrades(farmerCost, farmerNumber)
-    farmerNumber += 1
-    update() 
+function closeSettingMenu() {
+  document.getElementById("settingMenu").style.display = "none";
+  document.getElementById("settingMenu").style.opacity = "0%";
+  document.body.style.overflowY = "auto";
+}
+
+function buyWorker(workerBtn) {
+  // getting Index of the worker in the array.
+  const index = workers.indexOf(
+    workers.find((worker) => worker.name === workerBtn)
+  );
+
+  //Checking too see if the player has enough money to afford the worker.
+  if (potatos >= workers[index].cost) {
+    // Subtracing the workers cost form the player and changing the stats of that worker.
+    potatos -= workers[index].cost;
+    workers[index].owned++;
+    workers[index].cost = Math.floor(workers[index].cost * 1.115);
+
+    updateTextContent();
+  }
+}
+
+function upgradeClickCount() {
+  function costNum() {
+    if (upgrades.clickCount < 100) {
+      return upgrades.clickCost + 100;
+    } else {
+      return upgrades.clickCount * 100;
     }
-})
+  }
 
-farmEl.addEventListener("click",function() {
-    if (clickCount >= farmCost) {
-        farmCost = upgrades(farmCost, farmNumber)
-        farmNumber += 1
-        update() 
-        }
-})
+  function upgradeNum() {
+    if (upgrades.clickCount < 100) {
+      return 1;
+    } else if (upgrades.clickCount < 10000) {
+      return 100;
+    } else {
+      return 1000;
+    }
+  }
 
+  if (potatos >= upgrades.clickCost) {
+    potatos -= upgrades.clickCost;
+    upgrades.clickCost += 100; //costNum();
+    upgrades.clickCount += upgradeNum();
+  }
 
-factoryEl.addEventListener("click",function() {
-    if (clickCount >= factoryCost) {
-        factoryCost = upgrades(factoryCost, factoryNumber)
-        factoryNumber += 1
-        update() 
-        }
-})
+  updateTextContent();
+}
 
-mineEl.addEventListener("click", function() {
-    if (clickCount >= mineCost) {
-        mineCost = upgrades(mineCost, mineNumber)
-        mineNumber += 1
-        update() 
-        }
-})
+function upgradeMultiplier() {
+  if (potatos >= upgrades.multiplierCost) {
+    potatos -= upgrades.multiplierCost;
+    upgrades.multiplierCost *= 4;
+    upgrades.multiplier = JSON.parse((upgrades.multiplier + 0.1).toFixed(2));
+  }
 
-bakerEl.addEventListener("click", function() {
-    if (clickCount >= bakerCost) {
-        bakerCost = upgrades(bakerCost, bakerNumber)
-        bakerNumber += 1
-        update() 
-        }
-})
+  updateTextContent();
+}
 
-bankEl.addEventListener("click", function() {
-    if (clickCount >= bankCost) {
-        bankCost = upgrades(bankCost, bankNumber)
-        bankNumber += 1
-        update() 
-        }
-})
+function deleteSave() {
+  potatos = 0;
+  totalIncome = 0;
+  workers = JSON.parse(JSON.stringify(defaultWorkers));
+  upgrades = JSON.parse(JSON.stringify(defaultUpgrades));
+
+  localStorage.clear();
+  updateTextContent();
+}
+
+//////////////////////////
+/////UPDATE FUCTIONS/////
+////////////////////////
+
+function updateTextContent() {
+  potatoText.textContent = `You have ${potatos} Potatos`;
+  document.getElementById(
+    "subText"
+  ).textContent = `You are making ${calculate()} Potatos every second`;
+
+  workers.forEach((worker) => {
+    const element = document.getElementById(worker.name);
+    element.textContent = `${worker.name} (Cost: ${worker.cost}, Owned: ${worker.owned})`;
+  });
+
+  clickCountBtn.textContent = `+1 Click (Cost: ${upgrades.clickCost}. Owned: ${upgrades.clickCount})`;
+
+  //+1 Click (Cost: 100, Owned: 1x)
+
+  multiplierBtn.textContent = `+0.1x Multiplier (Cost: ${
+    upgrades.multiplierCost
+  }, Owned: ${upgrades.multiplier.toFixed(1)}x)`;
+
+  //+0.1x Multiplier (Cost: 100, Owned: 1.0x)
+
+  document.querySelector('title').textContent = `${potatos} potatos - Potato Clicker`;
+}
 
 function calculate() {
-    clickCount = clickCount + farmerNumber * multiplier;
-    clickCount = clickCount + farmNumber * 3 * multiplier;
-    clickCount = clickCount + factoryNumber * 10 * multiplier;
-    clickCount = clickCount + mineNumber * 16 * multiplier;
-    clickCount = clickCount + bakerNumber * 24 * multiplier;
-    clickCount = clickCount + bankNumber * 67 * multiplier;
+  totalIncome = 0;
+  workers.forEach((worker) => {
+    totalIncome += worker.owned * worker.income * upgrades.multiplier;
+  });
 
-    potatos = multiplier * (farmerNumber + farmNumber * 3 + factoryNumber * 10 + mineNumber * 16 + bakerNumber * 24 + bankNumber * 67)
-        update()
+  return Math.floor(totalIncome);
+}
+
+function save() {
+  localStorage.setItem("potatos", JSON.stringify(potatos));
+  localStorage.setItem("workers", JSON.stringify(workers));
+  localStorage.setItem("upgrades", JSON.stringify(upgrades));
 }
 
 function update() {
-    potatos = multiplier * (farmerNumber + farmNumber * 3 + factoryNumber * 10 + mineNumber * 16 + bakerNumber * 24 + bankNumber * 67)
-    potatosEl.textContent = `You are making ${potatos} potatoes every second`
+  potatos += calculate();
+  updateTextContent();
 
-    clickEl.textContent = `You have ${clickCount} potatoes`
-    farmerCostEl.textContent = `${farmerCost} Potatoes`
-    farmerNumberEl.textContent = `You have ${farmerNumber} farmers`
-    farmCostEl.textContent = `${farmCost} Potatoes`
-    farmNumberEl.textContent = `You have ${farmNumber} farms`
-    factoryCostEl.textContent = `${factoryCost} Potatoes`
-    factoryNumberEl.textContent = `You have ${factoryNumber} factories`
-
-    mineCostEl.textContent = `${mineCost} Potatoes`
-    mineNumberEl.textContent = `You have ${mineNumber} mines`
-    bakerCostEl.textContent = `${bakerCost} Potatoes`
-    bakerNumberEl.textContent = `You have ${bakerNumber} bakers`
-    bankCostEl.textContent = `${bankCost} Potatoes`
-    bankNumberEl.textContent = `You have ${bankNumber} banks`
-    save()
+  save();
 }
-
-
-function upgrades(numberCost, countNumber) {
-        clickCount -= numberCost
-        countNumber += 1
-        numberCost = numberCost + (countNumber * 6) 
-
-        return numberCost
-}
-
-
-
-
-
-function save() {
-    localStorage.setItem("clickCount", clickCount);
-    localStorage.setItem("farmerNumber", farmerNumber);
-    localStorage.setItem("farmerCost", farmerCost);
-    localStorage.setItem("farmNumber", farmNumber);
-    localStorage.setItem("farmCost", farmCost);
-    localStorage.setItem("factoryNumber", factoryNumber);
-    localStorage.setItem("factoryCost", factoryCost);
-    localStorage.setItem("mineNumber", mineNumber);
-    localStorage.setItem("mineCost", mineCost);
-    localStorage.setItem("bakerNumber", bakerNumber);
-    localStorage.setItem("bakerCost", bakerCost);
-    localStorage.setItem("bankNumber", bankNumber);
-    localStorage.setItem("bankCost", bankCost);
-
-    localStorage.setItem("multiplier", multiplier);
-}
-
-function load() {
-    clickCount = localStorage.getItem("clickCount");
-    clickCount = parseInt(clickCount);
-    farmerNumber = parseInt(localStorage.getItem("farmerNumber"))
-    farmerCost = parseInt(localStorage.getItem("farmerCost"))
-    farmNumber = parseInt(localStorage.getItem("farmNumber"))
-    farmCost = parseInt(localStorage.getItem("farmCost"))
-    farmNumber = parseInt(localStorage.getItem("farmNumber"))
-    factoryNumber = parseInt(localStorage.getItem("factoryNumber"))
-    factoryCost = parseInt(localStorage.getItem("factoryCost"))
-    mineNumber = parseInt(localStorage.getItem("mineNumber"))
-    mineCost = parseInt(localStorage.getItem("mineCost"))
-    bakerNumber = parseInt(localStorage.getItem("bakerNumber"))
-    bakerCost = parseInt(localStorage.getItem("bakerCost"))
-    bankNumber = parseInt(localStorage.getItem("bankNumber"))
-    bankCost = parseInt(localStorage.getItem("bankCost"))
-    update();
-
-}
-
-deleteBtn.addEventListener("mouseover", function() {
-    deleteTxt.textContent = "Double click"
-})
-
-deleteBtn.addEventListener("mouseout", function() {
-    deleteTxt.textContent = "DELETE SAVE"
-})
-
-deleteBtn.addEventListener("dblclick", function() {
-    clickCount = 0
-    farmerNumber = 0
-    farmerCost = 12
-    farmNumber = 0
-    farmCost = 100
-    farmNumber = 0
-    factoryNumber = 0
-    factoryCost = 550
-    mineNumber = 0
-    mineCost = 1384
-    bakerNumber = 0
-    bakerCost = 16234
-    bankNumber = 0
-    bankCost = 45832
-    localStorage.clear()
-})
