@@ -8,4 +8,3 @@
 - [ ] Ability to sell units
 - [x] Update UI
 - [x] Mulitplier
-- [x] STOP GETTING THE F***ING VALUEs STRAIGHT FROM THE DOM
