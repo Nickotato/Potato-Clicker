@@ -9,6 +9,7 @@ const deleteBtn = document.getElementById("delete");
 
 const farmerBtn = document.getElementById("farmer");
 const bakerBtn = document.getElementById("baker");
+const holderBtn = document.getElementById("place holder");
 
 const clickCountBtn = document.getElementById("clickCount");
 const multiplierBtn = document.getElementById("multiplier");
@@ -28,9 +29,15 @@ const defaultWorkers = [
   },
   {
     name: "baker",
-    income: 20,
+    income: 5,
     owned: 0,
-    cost: 50,
+    cost: 100,
+  },
+  {
+    name: "place holder",
+    income: 10,
+    owned: 0,
+    cost: 1000,
   },
 ];
 
@@ -64,28 +71,18 @@ potato.addEventListener("click", (e) => {
 
   const effect = document.createElement('div');
   const effectTxt = document.createElement('h1')
-  //const effectImg = document.createElement('img')
   
     effect.className = 'clickEffect';
-    effect.style.position = `absolute`;
-    effect.style.width = `20px`
     effect.style.left = `${e.pageX - 10}px`;
     effect.style.top = `${e.pageY - 20}px`;
-    effect.style.textAlign = `center`
-    effect.style.pointerEvents = `none`;
 
     effectTxt.textContent = `+${upgrades.clickCount}`
-    effectTxt.style.fontSize = '10px'
+    effectTxt.style.fontSize = '15px'
     effectTxt.style.animationName = `flyUp`
     effectTxt.style.animationDuration = `1.2s`
     
-    // effectImg.src = `images/potato.png`
-    // effectImg.style.width = `20px`;
-    // effectImg.style.animationName = `fadeOut`
-    // effectImg.style.animationDuration = `1.2s`
     
     effect.appendChild(effectTxt);
-    //effect.appendChild(effectImg);
     document.body.appendChild(effect);
     
     setTimeout(() => {
@@ -116,6 +113,10 @@ bakerBtn.addEventListener("click", () => {
   buyWorker("baker");
 });
 
+holderBtn.addEventListener("click", () => {
+  buyWorker("place holder");
+});
+
 //Upgrade Event Listeners//
 
 clickCountBtn.addEventListener("click", () => upgradeClickCount());
@@ -136,6 +137,14 @@ document
 /////////////////////
 /////FUNCTIONS//////
 ///////////////////
+
+function shakeScreen() {
+  document.body.style.animation = 'shake 0.5s';
+
+  setTimeout(() => {
+    document.body.style.animation = 'none';
+}, 500);
+}
 
 function openStatMenu() {
   document.getElementById("statMenu").style.display = "flex";
@@ -167,14 +176,21 @@ function buyWorker(workerBtn) {
     workers.find((worker) => worker.name === workerBtn)
   );
 
-  //Checking too see if the player has enough money to afford the worker.
   if (potatos >= workers[index].cost) {
+    const clickSound = new Audio();
+  clickSound.src = "sound/button.mp3";
+  clickSound.play();
+    shakeScreen();
     // Subtracing the workers cost form the player and changing the stats of that worker.
     potatos -= workers[index].cost;
     workers[index].owned++;
     workers[index].cost = Math.floor(workers[index].cost * 1.115);
 
     updateTextContent();
+  } else {
+    const clickSound = new Audio();
+    clickSound.src = "sound/fail.mp3";
+    clickSound.play();
   }
 }
 
@@ -198,9 +214,17 @@ function upgradeClickCount() {
   }
 
   if (potatos >= upgrades.clickCost) {
+    const clickSound = new Audio();
+  clickSound.src = "sound/button.mp3";
+  clickSound.play();
+    shakeScreen();
     potatos -= upgrades.clickCost;
     upgrades.clickCost += 100; //costNum();
     upgrades.clickCount += upgradeNum();
+  } else {
+    const clickSound = new Audio();
+    clickSound.src = "sound/fail.mp3";
+    clickSound.play();
   }
 
   updateTextContent();
@@ -208,9 +232,18 @@ function upgradeClickCount() {
 
 function upgradeMultiplier() {
   if (potatos >= upgrades.multiplierCost) {
+    const clickSound = new Audio();
+  clickSound.src = "sound/button.mp3";
+  clickSound.play();
+    shakeScreen();
     potatos -= upgrades.multiplierCost;
     upgrades.multiplierCost *= 4;
     upgrades.multiplier = JSON.parse((upgrades.multiplier + 0.1).toFixed(2));
+  }
+  else {
+    const clickSound = new Audio();
+    clickSound.src = "sound/fail.mp3";
+    clickSound.play();
   }
 
   updateTextContent();

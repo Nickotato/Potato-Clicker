@@ -191,6 +191,7 @@
     font-weight: bold;
     font-size: 1rem;
     margin: 10px auto;
+    cursor: pointer;
   }
   
   .upgrade:hover {
@@ -283,23 +284,18 @@
     background: rgb(13, 228, 110);
     color: white;
   }
-  
-  @keyframes fadeOut {
-    0%   {opacity: 100%;}
-    25%  {opacity: 75%;}
-    50%  {opacity: 50%;}
-    100% {opacity: 25%;}
-  }
 
-  @keyframes flyUp {
-    0% {
-      opacity: 100%;
-      transform: translateY(0px);
-    }
-    100% {
-      opacity: 0%;
-      transform: translateY(-50px);
-    }
+  .clickEffect {
+    position: absolute;
+    width: 20px;
+    text-align: center;
+    pointer-events: none;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
   }
 
   @media screen and (max-width: 1400px) {
@@ -340,3 +336,34 @@
     }
   }
   
+  @keyframes fadeOut {
+    0%   {opacity: 100%;}
+    25%  {opacity: 75%;}
+    50%  {opacity: 50%;}
+    100% {opacity: 25%;}
+  }
+
+  @keyframes flyUp {
+    0% {
+      opacity: 100%;
+      transform: translateY(0px);
+    }
+    100% {
+      opacity: 0%;
+      transform: translateY(-50px);
+    }
+  }
+
+  @keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
